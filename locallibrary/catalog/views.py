@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre
 from django.contrib.auth.models import User
 from django.views import generic
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 def index(request):
     # Generate counts of some of the main objects
@@ -43,10 +44,18 @@ class AuthorDetailView(generic.DetailView):
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
+class LoanedBooksByUserListView(PermissionRequiredMixin,generic.ListView):
+    permission_required = 'catalog.can_mark_returned'
     model = BookInstance
     template_name ='catalog/bookinstance_list_borrowed_user.html'
 
     def get_queryset(self):
         return BookInstance.objects.filter(borrower=self.request.user) \
         .filter(status__exact='o').order_by('due_back')
+
+class AllLoanedBooks(LoginRequiredMixin,generic.ListView):
+    model = BookInstance
+    template_name ='catalog/bookinstance_list_borrowed_librarian.html'
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(status__exact='o').order_by('due_back')
