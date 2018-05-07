@@ -68,7 +68,7 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ["due_back"]
-        permissions = (("can_mark_returned", "Set book as returned"),) 
+        permissions = (("can_mark_returned", "Set book as returned"),)
 
 
     def __str__(self):
@@ -78,7 +78,7 @@ class Author(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField(null=True, blank=True)
-    date_of_death = models.DateField('Died', null=True, blank=True)
+    date_of_death = models.DateField('died', null=True, blank=True)
 
     class Meta:
         ordering = ["last_name","first_name"]
